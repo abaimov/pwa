@@ -6,7 +6,7 @@ export default async function Home() {
 
     try {
         // Пытаемся получить данные с основного API
-        const data = await fetch('http://localhost:3000/api/links');
+        const data = await fetch('https://pwa-mu1.vercel.app/api/links');
         if (!data.ok) {
             throw new Error('Ошибка при получении данных с API localhost:3000');
         }
@@ -15,13 +15,14 @@ export default async function Home() {
         console.error('Ошибка при получении данных с localhost:3000, пробуем localhost:8000:', error);
         try {
             // Если основной сервер не доступен, пробуем второй сервер
-            const fallbackData = await fetch('http://localhost:3000/api/linkupdate', {cache: "no-cache"});
+            const fallbackData = await fetch('https://pwa-mu1.vercel.app/api/linkupdate', {cache: "no-cache"});
             if (!fallbackData.ok) {
                 throw new Error('Ошибка при получении данных с API localhost:8000');
             }
             posts = await fallbackData.json();
         } catch (fallbackError) {
             console.error('Ошибка при получении данных с localhost:8000:', fallbackError);
+            console.log('hello')
             // При ошибке на обоих серверах используем запасную ссылку
             posts.link = 'https://fallback-link.com';
         }
