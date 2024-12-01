@@ -1,4 +1,5 @@
 import LinksComponent from "@/app/components/LinksComponent";
+import CustomApp from "@/app/components/ClientContent";
 
 export default function Home() {
     // Запасной URL на случай, если оба сервера не доступны
@@ -49,6 +50,8 @@ export default function Home() {
             </div>
             <h2>Динамический контент</h2>
             {/*<LinksComponent link={posts.link}/>*/}
+
+            <CustomApp/>
         </div>
     );
 }
