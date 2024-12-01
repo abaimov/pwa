@@ -6,7 +6,7 @@ export default async function Home() {
 
     try {
         // Пытаемся получить данные с основного API
-        const data = await fetch('https://pwa-mu1.vercel.app/api/links');
+        const data = await fetch('https://pwa-mu1.vercel.app/api/link');
         if (!data.ok) {
             throw new Error('Ошибка при получении данных с API localhost:3000');
         }
