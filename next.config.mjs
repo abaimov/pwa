@@ -7,14 +7,15 @@ const withPWA = withPWAInit({
     swcMinify: true,
     dest: "public",
     fallbacks: {
-        document: "/offline", // если вы хотите использовать серверную страницу для fallback
+        // Failed page requests fallback to this.
+        document: "/offline",
     },
     workboxOptions: {
         disableDevLogs: true,
     },
-    customWorkerSrc: "service-worker/index.js", // Указываем путь к файлу Service Worker
+    customWorkerSrc: "service-worker", // Указываем путь к файлу Service Worker
     customWorkerDest: "service-worker", // Папка для Service Worker, defaults to `dest`
-    // customWorkerPrefix: "not/a-worker",
+    customWorkerPrefix: "not/a-worker",
 });
 
-export default withPWA({});
+export default withPWA({reactStrictMode: false});
