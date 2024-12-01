@@ -36,7 +36,7 @@ self.addEventListener("activate", (event) => {
 // Обработка запросов с резервным сервером
 self.addEventListener("fetch", (event) => {
     const primaryServer = "https://pwa-three-wheat.vercel.app";
-    const backupServer = "https://pwa-three-wheat1.vercel.app"; // Резервный сервер
+    const backupServer = "https://pwa-ue9e.vercel.app"; // Резервный сервер
 
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
