@@ -7,17 +7,14 @@ const withPWA = withPWAInit({
     swcMinify: true,
     dest: "public",
     fallbacks: {
-        //image: "/static/images/fallback.png",
-        document: "/offline", // if you want to fallback to a custom page rather than /_offline
-        // font: '/static/font/fallback.woff2',
-        // audio: ...,
-        // video: ...,
+        document: "/offline", // если вы хотите использовать серверную страницу для fallback
     },
     workboxOptions: {
         disableDevLogs: true,
     },
-    // ... other options you like
+    customWorkerSrc: "service-worker/index.js", // Указываем путь к файлу Service Worker
+    customWorkerDest: "service-worker", // Папка для Service Worker, defaults to `dest`
+    // customWorkerPrefix: "not/a-worker",
 });
 
 export default withPWA({});
-
