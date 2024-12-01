@@ -1,6 +1,6 @@
 import LinksComponent from "@/app/components/LinksComponent";
 
-export default async function Home() {
+export default function Home() {
     // Запасной URL на случай, если оба сервера не доступны
     let posts = {link: "https://fallback-link.com"};
     //
