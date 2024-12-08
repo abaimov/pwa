@@ -42,6 +42,9 @@ const withPWA = withPWAInit({
 
 const nextConfig = {
     reactStrictMode: false,
+    images: {
+        domains: ['plus.unsplash.com', 'images.unsplash.com'],
+    },
     async rewrites() {
         return [
             {
@@ -53,4 +56,3 @@ const nextConfig = {
 };
 
 export default withPWA(nextConfig);
-

@@ -1,7 +1,7 @@
 'use client'
 
-import {useState, useEffect} from 'react'
-
+import { useState, useEffect } from 'react'
+import styles from './DynamicContent.module.css'
 
 export default function DynamicContent() {
     const [link, setLink] = useState(null)
@@ -46,7 +46,6 @@ export default function DynamicContent() {
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
 
-        // Обновляем данные каждые 30 секунд
         const intervalId = setInterval(fetchLink, 30000)
 
         return () => {
@@ -57,22 +56,28 @@ export default function DynamicContent() {
     }, [])
 
     return (
-        <div className="p-4 border rounded shadow-sm">
-            <h2 className="text-xl font-bold mb-4">Динамический контент</h2>
+        <div className={styles.container}>
             {!isOnline && (
-                <p className="text-yellow-600 mb-2">Вы сейчас офлайн. Отображается резервная ссылка.</p>
+                <p className={styles.offlineMessage}>
+                    Вы сейчас офлайн. Отображается резервная ссылка.
+                </p>
             )}
             {isLoading ? (
-                <p>Загрузка динамического контента...</p>
+                <div className={styles.loadingContainer}>
+                    <p className={styles.loadingText}>Загрузка динамического контента...</p>
+                </div>
             ) : link ? (
-                <a
-                    href={link.url}
-                    className="text-blue-600 hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {link.text}
-                </a>
+                <div className={styles.linkContainer}>
+                    <p className={styles.linkLabel}>Динамически загруженная ссылка:</p>
+                    <a
+                        href={link.url}
+                        className={styles.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {link.text}
+                    </a>
+                </div>
             ) : null}
         </div>
     )

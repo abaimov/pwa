@@ -1,0 +1,59 @@
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    padding: 3rem 1rem;
+}
+
+.content {
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: #4b5563;
+}
+
+.section {
+    background-color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.imageContainer {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.sectionContent {
+    padding: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.sectionText {
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+

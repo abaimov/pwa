@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.offlineMessage {
+  color: #b45309;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 5rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+.loadingText {
+  color: #4b5563;
+}
+
+.linkContainer {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.linkLabel {
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.link {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
