@@ -1,6 +1,7 @@
 import DynamicContent from "@/app/components/DynamicContent";
 import Image from "next/image";
 import styles from './../page.module.css';
+import DownloadBanner from "@/app/components/DownloadBanner";
 
 export default function Home() {
     return (
@@ -57,6 +58,7 @@ export default function Home() {
                     </section>
                 </main>
             </div>
+            <DownloadBanner/>
         </div>
     );
 }
