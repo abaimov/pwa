@@ -7,10 +7,13 @@ export default function DynamicContent() {
     const [link, setLink] = useState(null)
     const [isOnline, setIsOnline] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     const fetchLink = async () => {
         setIsLoading(true)
+        setError(null)
         try {
+            console.log('Attempting to fetch link...')
             const response = await fetch('/api/link', {
                 method: 'GET',
                 headers: {
@@ -20,13 +23,18 @@ export default function DynamicContent() {
                 },
                 cache: 'no-store'
             })
+
+            console.log('Response status:', response.status)
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`)
             }
+
             const data = await response.json()
+            console.log('Received data:', data)
             setLink(data)
         } catch (error) {
-            console.log('Не удалось получить данные с сервера. Использую резервную ссылку.')
+            console.error('Error fetching link:', error)
+            setError(`Не удалось получить данные с сервера. Ошибка: ${error.message}`)
             setLink({url: 'https://www.google.com', text: 'Google (резервная ссылка)'})
         } finally {
             setIsLoading(false)
@@ -61,6 +69,9 @@ export default function DynamicContent() {
                 <p className={styles.offlineMessage}>
                     Вы сейчас офлайн. Отображается резервная ссылка.
                 </p>
+            )}
+            {error && (
+                <p className={styles.errorMessage}>{error}</p>
             )}
             {isLoading ? (
                 <div className={styles.loadingContainer}>
