@@ -1,31 +1,50 @@
-'use client'
+import {Roboto} from 'next/font/google'
 
-import { useEffect } from 'react'
-import { Inter } from 'next/font/google'
-import './globals.css'
+const roboto = Roboto({
+    weight: ['400', '700'],
+    subsets: ['latin'],
+    display: 'swap',
+})
 
-const inter = Inter({ subsets: ['latin'] })
+export const metadata = {
+    applicationName: "PWA App",
+    title: {
+        default: "My Awesome PWA App",
+        template: "%s - PWA App",
+    },
+    description: "Best PWA app in the world!",
+    manifest: "/manifest.json",
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "default",
+        title: "My Awesome PWA App",
+    },
+    formatDetection: {
+        telephone: false,
+    },
+    openGraph: {
+        type: "website",
+        siteName: "PWA App",
+        title: {
+            default: "My Awesome PWA App",
+            template: "%s - PWA App",
+        },
+        description: "Best PWA app in the world!",
+    },
+    twitter: {
+        card: "summary",
+        title: {
+            default: "My Awesome PWA App",
+            template: "%s - PWA App",
+        },
+        description: "Best PWA app in the world!",
+    },
+};
 
-export default function RootLayout({ children }) {
-    useEffect(() => {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(
-                    function(registration) {
-                        console.log('Service Worker registration successful with scope: ', registration.scope);
-                    },
-                    function(err) {
-                        console.log('Service Worker registration failed: ', err);
-                    }
-                );
-            });
-        }
-    }, [])
-
+export default function RootLayout({children}) {
     return (
-        <html lang="ru">
-        <body className={inter.className}>{children}</body>
+        <html lang="en">
+        <body className={roboto.className}>{children}</body>
         </html>
-    )
+    );
 }
-
