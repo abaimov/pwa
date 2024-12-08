@@ -1,103 +1,90 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react';
-import styles from './DownloadBanner.module.css';
+
+import { useState, useEffect, useCallback } from 'react'
+import styles from './DownloadBanner.module.css'
 
 const DownloadBanner = () => {
-  const [showBanner, setShowBanner] = useState(false);
-  const [deviceType, setDeviceType] = useState('');
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showBanner, setShowBanner] = useState(false)
+  const [deviceType, setDeviceType] = useState('')
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
 
   const hideBanner = useCallback(() => {
-    setShowBanner(false);
-  }, []);
+    setShowBanner(false)
+  }, [])
 
   const handleInstallClick = useCallback(() => {
     if (deferredPrompt) {
-      hideBanner();
-      deferredPrompt.prompt();
+      hideBanner()
+      deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('Пользователь установил PWA.');
+          console.log('Пользователь установил PWA.')
         } else {
-          console.log('Пользователь отказался установить PWA.');
+          console.log('Пользователь отказался установить PWA.')
         }
-        setDeferredPrompt(null);
-      });
+        setDeferredPrompt(null)
+      })
     }
-  }, [deferredPrompt, hideBanner]);
+  }, [deferredPrompt, hideBanner])
 
-  useEffect(() => {
-    const checkPWAInstalled = () => {
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        return true;
-      }
-      if (window.navigator.standalone === true) {
-        return true;
-      }
-      return false;
-    };
-
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      setDeferredPrompt(event);
-      setShowBanner(true);
-    };
-
-    const handleAppInstalled = () => {
-      console.log('PWA успешно установлено.');
-      hideBanner();
-    };
-
+  const getDeviceType = () => {
     const ua = navigator.userAgent.toLowerCase();
-    const isAndroid = ua.indexOf('android') > -1;
-    const isIOS = /iphone|ipad|ipod/.test(ua);
-    const isWindows = ua.indexOf('win') > -1;
-    const isMac = ua.indexOf('mac') > -1;
-
-    if (isAndroid) {
-      setDeviceType('android');
-    } else if (isIOS) {
-      setDeviceType('ios');
-    } else if (isWindows) {
-      setDeviceType('windows');
-    } else if (isMac) {
-      setDeviceType('mac');
-    }
-
-    if (!checkPWAInstalled()) {
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.addEventListener('appinstalled', handleAppInstalled);
-    }
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, [hideBanner]);
-
-  if (!showBanner) return null;
+    if (/android/.test(ua)) return 'android';
+    if (/iphone|ipad|ipod/.test(ua)) return 'ios';
+    return 'desktop';
+  };
 
   const getInstructions = () => {
     switch (deviceType) {
       case 'android':
-        return 'Нажмите кнопку "Установить" для добавления приложения на главный экран';
+        return 'Нажмите на значок "Добавить на главный экран" в меню браузера';
       case 'ios':
         return 'Нажмите на значок "Поделиться" и выберите "На экран «Домой»"';
-      case 'windows':
-      case 'mac':
-        return 'Нажмите кнопку "Установить" для установки приложения';
       default:
         return 'Установите наше PWA приложение для лучшего опыта';
     }
   };
 
+  useEffect(() => {
+    const checkPWAInstalled = () => {
+      return window.matchMedia('(display-mode: standalone)').matches || (window.navigator.standalone === true);
+    }
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault()
+      setDeferredPrompt(event)
+      setShowBanner(true)
+    }
+
+    const handleAppInstalled = () => {
+      console.log('PWA успешно установлено.')
+      hideBanner()
+    }
+
+    setDeviceType(getDeviceType());
+
+    if (!checkPWAInstalled()) {
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.addEventListener('appinstalled', handleAppInstalled)
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [hideBanner])
+
+  if (!showBanner) return null
+
   return (
       <div className={styles.banner}>
-        <p className={styles.bannerText}>
-          Установите наше PWA приложение для лучшего опыта!
-        </p>
-        <p className={styles.bannerInstructions}>{getInstructions()}</p>
-        {deferredPrompt && (
+        <div className={styles.bannerContent}>
+          <p className={styles.bannerText}>
+            Установите наше PWA приложение для лучшего опыта!
+          </p>
+          <p className={styles.bannerInstructions}>{getInstructions()}</p>
+        </div>
+        {deferredPrompt && deviceType === 'android' && (
             <button
                 className={styles.installButton}
                 onClick={handleInstallClick}
@@ -113,8 +100,8 @@ const DownloadBanner = () => {
           &times;
         </button>
       </div>
-  );
-};
+  )
+}
 
-export default DownloadBanner;
+export default DownloadBanner
 

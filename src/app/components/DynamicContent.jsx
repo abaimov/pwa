@@ -14,7 +14,7 @@ export default function DynamicContent() {
         setError(null)
         try {
             console.log('Attempting to fetch link...')
-            const response = await fetch('http://localhost:8000/api/link', {
+            const response = await fetch('/api/link', {
                 method: 'GET',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -36,7 +36,6 @@ export default function DynamicContent() {
         } catch (error) {
             console.error('Error fetching link:', error)
             setError(`Не удалось получить данные с сервера. Ошибка: ${error.message}`)
-            setLink({url: 'https://www.google.com', text: 'Google (резервная ссылка)'})
         } finally {
             setIsLoading(false)
         }
@@ -55,11 +54,21 @@ export default function DynamicContent() {
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
 
+        // Слушаем сообщения от Service Worker
+        const handleMessage = (event) => {
+            if (event.data && event.data.type === 'API_RESPONSE') {
+                setLink(event.data.payload)
+                setIsLoading(false)
+            }
+        }
+        navigator.serviceWorker.addEventListener('message', handleMessage)
+
         const intervalId = setInterval(fetchLink, 30000)
 
         return () => {
             window.removeEventListener('online', updateOnlineStatus)
             window.removeEventListener('offline', updateOnlineStatus)
+            navigator.serviceWorker.removeEventListener('message', handleMessage)
             clearInterval(intervalId)
         }
     }, [])
