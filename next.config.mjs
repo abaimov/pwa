@@ -6,16 +6,41 @@ const withPWA = withPWAInit({
     reloadOnOnline: true,
     swcMinify: true,
     dest: "public",
+    register: true,
+    skipWaiting: true,
     fallbacks: {
-        // Failed page requests fallback to this.
         document: "/offline",
     },
     workboxOptions: {
         disableDevLogs: true,
     },
-    customWorkerSrc: "service-worker", // Указываем путь к файлу Service Worker
-    customWorkerDest: "service-worker", // Папка для Service Worker, defaults to `dest`
+    customWorkerSrc: "service-worker",
+    customWorkerDest: "service-worker",
     customWorkerPrefix: "not/a-worker",
+    runtimeCaching: [
+        {
+            urlPattern: /^https?.*/,
+            handler: 'NetworkFirst',
+            options: {
+                cacheName: 'offlineCache',
+                expiration: {
+                    maxEntries: 200,
+                },
+            },
+        },
+    ],
 });
 
-export default withPWA({reactStrictMode: false});
+const nextConfig = {
+    reactStrictMode: false,
+    async rewrites() {
+        return [
+            {
+                source: '/api/link',
+                destination: 'http://localhost:8000/api/link',
+            },
+        ];
+    },
+};
+
+export default withPWA(nextConfig);
