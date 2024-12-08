@@ -28,6 +28,13 @@ const withPWA = withPWAInit({
                 },
             },
         },
+        {
+            urlPattern: /\/api\/link/,
+            handler: 'NetworkOnly',
+            options: {
+                cacheName: 'api-cache',
+            },
+        },
     ],
 });
 
@@ -44,3 +51,4 @@ const nextConfig = {
 };
 
 export default withPWA(nextConfig);
+
