@@ -13,29 +13,31 @@ const withPWA = withPWAInit({
     },
     workboxOptions: {
         disableDevLogs: true,
-    },
-    customWorkerSrc: "service-worker",
-    customWorkerDest: "service-worker",
-    customWorkerPrefix: "not/a-worker",
-    runtimeCaching: [
-        {
-            urlPattern: /^https?.*/,
-            handler: 'NetworkFirst',
-            options: {
-                cacheName: 'offlineCache',
-                expiration: {
-                    maxEntries: 200,
+        runtimeCaching: [
+            {
+                urlPattern: ({ url }) => {
+                    return !url.pathname.includes('/api/');
+                },
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'static-cache',
+                    expiration: {
+                        maxEntries: 200,
+                    },
                 },
             },
-        },
-        {
-            urlPattern: /\/api\/link/,
-            handler: 'NetworkOnly',
-            options: {
-                cacheName: 'api-cache',
+            {
+                urlPattern: ({ url }) => {
+                    return url.pathname.includes('/api/');
+                },
+                handler: 'NetworkOnly',
+                options: {
+                    cacheName: 'api-cache',
+                    networkTimeoutSeconds: 5,
+                },
             },
-        },
-    ],
+        ],
+    },
 });
 
 const nextConfig = {

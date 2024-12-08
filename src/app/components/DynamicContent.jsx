@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-
+import {useState, useEffect} from 'react'
 
 
 export default function DynamicContent() {
@@ -9,30 +8,32 @@ export default function DynamicContent() {
     const [isOnline, setIsOnline] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchLink = async () => {
-            setIsLoading(true)
-            try {
-                const response = await fetch('http://localhost:8000/api/link', {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                })
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`)
-                }
-                const data = await response.json()
-                setLink(data)
-            } catch (error) {
-                console.log('Не удалось получить данные с сервера. Использую резервную ссылку.')
-                setLink({url: 'https://www.google.com', text: 'Google (резервная ссылка)'})
-            } finally {
-                setIsLoading(false)
+    const fetchLink = async () => {
+        setIsLoading(true)
+        try {
+            const response = await fetch('/api/link', {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                cache: 'no-store'
+            })
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
             }
+            const data = await response.json()
+            setLink(data)
+        } catch (error) {
+            console.log('Не удалось получить данные с сервера. Использую резервную ссылку.')
+            setLink({url: 'https://www.google.com', text: 'Google (резервная ссылка)'})
+        } finally {
+            setIsLoading(false)
         }
+    }
 
+    useEffect(() => {
         const updateOnlineStatus = () => {
             const online = navigator.onLine
             setIsOnline(online)
@@ -45,9 +46,13 @@ export default function DynamicContent() {
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
 
+        // Обновляем данные каждые 30 секунд
+        const intervalId = setInterval(fetchLink, 30000)
+
         return () => {
             window.removeEventListener('online', updateOnlineStatus)
             window.removeEventListener('offline', updateOnlineStatus)
+            clearInterval(intervalId)
         }
     }, [])
 
