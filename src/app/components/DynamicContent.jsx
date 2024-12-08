@@ -14,7 +14,7 @@ export default function DynamicContent() {
         setError(null)
         try {
             console.log('Attempting to fetch link...')
-            const response = await fetch('/api/link', {
+            const response = await fetch('http:/localhost:8000/api/link', {
                 method: 'GET',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
