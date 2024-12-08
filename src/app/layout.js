@@ -1,20 +1,30 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Inter } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({ children }) {
     useEffect(() => {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => console.log('Service Worker registered with scope:', registration.scope))
-                .catch((error) => console.error('Service Worker registration failed:', error))
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                        console.log('Service Worker registration successful with scope: ', registration.scope);
+                    },
+                    function(err) {
+                        console.log('Service Worker registration failed: ', err);
+                    }
+                );
+            });
         }
     }, [])
 
     return (
         <html lang="ru">
-        <body>{children}</body>
+        <body className={inter.className}>{children}</body>
         </html>
     )
 }
