@@ -14,22 +14,8 @@ const withPWA = withPWAInit({
     workboxOptions: {
         disableDevLogs: true,
     },
-    customWorkerSrc: "service-worker",
-    customWorkerDest: "service-worker",
-    customWorkerPrefix: "not/a-worker",
-    runtimeCaching: [
-        {
-            urlPattern: /^https?.*/,
-            handler: 'NetworkFirst',
-            options: {
-                cacheName: 'offlineCache',
-                networkTimeoutSeconds: 10,
-                expiration: {
-                    maxEntries: 200,
-                },
-            },
-        },
-    ],
+    customWorkerSrc: "service-worker/index.js",
+    customWorkerDest: "service-worker/index.js",
 });
 
 const nextConfig = {
