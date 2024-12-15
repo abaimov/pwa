@@ -27,11 +27,10 @@ const nextConfig = {
         return [
             {
                 source: '/api/link',
-                destination: 'http://localhost:8000/api/link',
+                destination: 'https://express-pwa.onrender.com',
             },
         ];
     },
 };
 
 export default withPWA(nextConfig);
-

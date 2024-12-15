@@ -1,31 +1,31 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback } from 'react'
-import styles from './DownloadBanner.module.css'
+import { useState, useEffect, useCallback } from 'react';
+import styles from './DownloadBanner.module.css';
 
 const DownloadBanner = () => {
-  const [showBanner, setShowBanner] = useState(false)
-  const [deviceType, setDeviceType] = useState('')
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [showBanner, setShowBanner] = useState(false);
+  const [deviceType, setDeviceType] = useState('');
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   const hideBanner = useCallback(() => {
-    setShowBanner(false)
-  }, [])
+    setShowBanner(false);
+  }, []);
 
   const handleInstallClick = useCallback(() => {
     if (deferredPrompt) {
-      hideBanner()
-      deferredPrompt.prompt()
+      hideBanner();
+      deferredPrompt.prompt(); // Показываем системный запрос на установку
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('Пользователь установил PWA.')
+          console.log('Пользователь установил PWA.');
         } else {
-          console.log('Пользователь отказался установить PWA.')
+          console.log('Пользователь отказался установить PWA.');
         }
-        setDeferredPrompt(null)
-      })
+        setDeferredPrompt(null); // Сбрасываем deferredPrompt после использования
+      });
     }
-  }, [deferredPrompt, hideBanner])
+  }, [deferredPrompt, hideBanner]);
 
   const getDeviceType = () => {
     const ua = navigator.userAgent.toLowerCase();
@@ -40,6 +40,8 @@ const DownloadBanner = () => {
         return 'Нажмите на значок "Добавить на главный экран" в меню браузера';
       case 'ios':
         return 'Нажмите на значок "Поделиться" и выберите "На экран «Домой»"';
+      case 'desktop':
+        return 'Нажмите на кнопку ниже, чтобы установить PWA';
       default:
         return 'Установите наше PWA приложение для лучшего опыта';
     }
@@ -48,33 +50,33 @@ const DownloadBanner = () => {
   useEffect(() => {
     const checkPWAInstalled = () => {
       return window.matchMedia('(display-mode: standalone)').matches || (window.navigator.standalone === true);
-    }
+    };
 
     const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault()
-      setDeferredPrompt(event)
-      setShowBanner(true)
-    }
+      event.preventDefault(); // Блокируем стандартное поведение браузера
+      setDeferredPrompt(event); // Сохраняем deferredPrompt
+      setShowBanner(true); // Показываем баннер
+    };
 
     const handleAppInstalled = () => {
-      console.log('PWA успешно установлено.')
-      hideBanner()
-    }
+      console.log('PWA успешно установлено.');
+      hideBanner();
+    };
 
     setDeviceType(getDeviceType());
 
     if (!checkPWAInstalled()) {
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.addEventListener('appinstalled', handleAppInstalled)
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.addEventListener('appinstalled', handleAppInstalled);
     }
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
-    }
-  }, [hideBanner])
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, [hideBanner]);
 
-  if (!showBanner) return null
+  if (!showBanner) return null;
 
   return (
       <div className={styles.banner}>
@@ -84,7 +86,7 @@ const DownloadBanner = () => {
           </p>
           <p className={styles.bannerInstructions}>{getInstructions()}</p>
         </div>
-        {deferredPrompt && deviceType === 'android' && (
+        {(deferredPrompt && (deviceType === 'android' || deviceType === 'desktop')) && (
             <button
                 className={styles.installButton}
                 onClick={handleInstallClick}
@@ -100,8 +102,7 @@ const DownloadBanner = () => {
           &times;
         </button>
       </div>
-  )
-}
+  );
+};
 
-export default DownloadBanner
-
+export default DownloadBanner;
